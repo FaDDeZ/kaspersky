@@ -1,0 +1,84 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct computer {
+public:
+    string name;
+    unsigned mac;
+    unsigned mac_con;
+    computer(string name, unsigned mac) {
+        this->name = name;
+        this->mac = mac;
+        mac_con = NULL;
+    }
+    void set_mac_con(unsigned mac_con) {
+        this->mac_con = mac_con;
+    }
+};
+
+bool comp(computer i, computer j) {
+    return i.mac < j.mac;
+}
+
+void create(int numbers, vector<computer>& computers) {
+    string name{ "" };
+    unsigned mac{ 0 };
+    for (int i = 0; i < numbers; i++)
+    {
+        cin >> name >> mac;
+        computer computer(name, mac);
+        computers.push_back(computer);
+    }
+    sort(computers.begin(), computers.end(), comp);
+}
+
+
+void set_macs(int numbers, vector<computer>& computers) {
+    int first{ 0 };
+    int second{ 0 };
+    auto iter{ computers.begin() };
+    for (int i = 0; i < numbers; i++)
+    {
+        cin >> first >> second;
+        while (iter != computers.end())
+        {
+            if (iter->mac == first) iter->set_mac_con(second);
+            iter++;
+        }
+        iter = computers.begin();
+    }
+}
+
+void find_inf(vector<computer>& computers) {
+    auto iter = computers.begin();
+    while (iter != computers.end()) {
+    l:
+        if ((iter->name).find("infected") != string::npos) {
+            cout << iter->name << endl;
+        }
+        for (auto iter_1 = computers.begin(); iter_1 != computers.end(); iter_1++) {
+            if (iter->mac_con == iter_1->mac) {
+                iter = iter_1;
+                goto l;
+            }
+
+        }
+        iter++;
+    }
+}
+
+int main()
+{
+    int numbers{ 0 };
+    vector<computer> computers{};
+    cin >> numbers;
+    create(numbers, computers);
+    int numbers_con{ 0 };
+    cin >> numbers_con;
+    set_macs(numbers_con, computers);
+    find_inf(computers);
+}
